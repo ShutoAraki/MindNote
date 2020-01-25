@@ -54,6 +54,7 @@
           <b-form-input
             id="form-content-input"
             type="text"
+            size="lg"
             v-model="addNoteForm.content"
             required
             placeholder="Write whatever is on your mind!"
@@ -241,5 +242,10 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+#form-content-input {
+    height: 400px;
+    text-align:start;
 }
 </style>

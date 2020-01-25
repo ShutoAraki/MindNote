@@ -1,11 +1,11 @@
 <template>
   <div
     class="border-top pr-2"
-    style="padding-top: 15px; padding-bottom: 15px; display: flex"
+    style="padding-top: 15px; padding-left: 15px; padding-bottom: 15px; display: flex"
     v-bind:class="{ active: is_active }"
   >
     <div style="overflow-x: hidden; white-space: nowrap;">
-      <button type="button" class="btn btn-sm" @click="change_note">{{ title }}</button>
+      <button type="button" style="font-size: 20px" class="btn btn-sm" @click="change_note">{{ title }}</button>
     </div>
     <div class="spacer"></div>
     <small
@@ -62,6 +62,7 @@ export default {
 
 #date {
   position: relative;
+  padding-right: 20px;
 }
 
 #date::before {
@@ -72,7 +73,7 @@ export default {
   position: absolute;
   top: -15px;
   left: -30px;
-  background: linear-gradient(to right, transparent, white);
+  background: linear-gradient(to right, transparent, rgb(243, 241, 196));
 }
 
 .active #date::before {
