@@ -7,3 +7,4 @@ MulticoreTSNE
 numpy
 gensim
 nltk
+torch
