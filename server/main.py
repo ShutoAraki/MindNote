@@ -2,7 +2,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from flask import Flask, request, jsonify
-app = Flask(__name__)
+from flask_cors import CORS
+app = Flask(__name__,
+    static_url_path='', 
+    static_folder='public')
+CORS(app, resources={r'/api/*': {'origins': '*'}})
 
 from database import Database, NoteNotFoundException
 db = Database()
@@ -62,5 +66,9 @@ def get_map():
         notes[i]['x'], notes[i]['y'] = coordinates[i]
     return jsonify(notes)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return app.send_static_file('index.html')
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')

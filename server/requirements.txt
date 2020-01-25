@@ -1,5 +1,9 @@
 flask
+flask_cors
 pymongo
 dnspython
 python-dotenv
 MulticoreTSNE
+numpy
+gensim
+nltk

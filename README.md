@@ -14,3 +14,6 @@ Organize/visualize your thoughts and ideas into clouds!
 
 ## Example
 
+## Build instructions
+
+Run `docker image build --tag mindnote:latest .` to build the Docker image, and then run it with `docker run -it --rm -p 5000:5000 mindnote:latest`
