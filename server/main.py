@@ -24,7 +24,10 @@ def get_note(note_id):
 
 @app.route("/api/notes", methods=['GET'])
 def get_notes():
-    return jsonify(**db.get_notes())
+    try:
+        return jsonify(db.get_notes())
+    except NoteNotFoundException:
+        return jsonify({}), 404
 
 if __name__ == "__main__":
     app.run()
