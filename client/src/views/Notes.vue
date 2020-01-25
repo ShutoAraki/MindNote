@@ -51,14 +51,14 @@
           ></b-form-input>
         </b-form-group>
         <b-form-group id="form-content-group" label="Content:" label-for="form-content-input">
-          <b-form-input
+          <b-form-textarea
             id="form-content-input"
             type="text"
             size="lg"
             v-model="addNoteForm.content"
             required
             placeholder="Write whatever is on your mind!"
-          ></b-form-input>
+          ></b-form-textarea>
         </b-form-group>
         <b-button-group>
           <b-button type="submit" variant="primary">Submit</b-button>
@@ -83,13 +83,13 @@
           label="Content:"
           label-for="form-content-edit-input"
         >
-          <b-form-input
-            id="form-content-edit-input"
+          <b-form-textarea
+            id="form-content-input"
             type="text"
             v-model="editForm.content"
             required
             placeholder="Let your mind wander"
-          ></b-form-input>
+          ></b-form-textarea>
         </b-form-group>
         <b-button-group>
           <b-button type="submit" variant="primary">Update</b-button>
@@ -129,17 +129,17 @@ export default {
     },
     methods: {
         async get_note(id) {
-            const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
+            const path = `http://localhost:5000/api/note/${id}`;
             return (await axios.get(path)).data;
         },
         async get_notes() {
             this.loading_notes = true;
-            const path = process.env.VUE_APP_API_URL + '/api/notes';
+            const path = 'http://localhost:5000/api/notes';
             this.notes = (await axios.get(path)).data;
             this.loading_notes = false;
         },
         async addNote(payload) {
-            const path = process.env.VUE_APP_API_URL + '/api/note';
+            const path = 'http://localhost:5000/api/note';
             let id = (await axios.post(path, payload)).data.id;
             this.get_notes();
             this.change_note(id);
@@ -157,13 +157,13 @@ export default {
             this.$bvModal.show('note-update-modal');
         },
         async send_update_note(payload, id) {
-            const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
+            const path = `http://localhost:5000/api/note/${id}`;
             await axios.post(path, payload);
             this.$refs.note_viewer.get_note(id);
             this.get_notes();
         },
         async delete_note(id) {
-            const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
+            const path = `http://localhost:5000/api/note/${id}`;
             await axios.delete(path);
             this.get_notes();
             this.change_note('');
@@ -246,6 +246,5 @@ export default {
 
 #form-content-input {
     height: 400px;
-    text-align:start;
 }
 </style>
