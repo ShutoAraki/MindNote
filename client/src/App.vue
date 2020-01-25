@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <b-navbar id="notes-navbar" type="dark">
-      <b-navbar-brand href="#">MindNotes</b-navbar-brand>
+      <b-navbar-brand href="/notes/">MindNotes</b-navbar-brand>
       <b-navbar-nav class="ml-auto">
         <b-button size="sm" class="my-2 my-sm-0" v-on:click="change_view">{{ opposite_view }}</b-button>
       </b-navbar-nav>

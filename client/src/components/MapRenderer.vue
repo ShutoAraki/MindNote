@@ -75,6 +75,7 @@ export default {
             backgroundColor: '#ff0000',
             pointRadius: 8,
             pointHoverRadius: 10,
+            pointHitRadius: 10,
             pointStyle: note_icon
           }
         ]

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Notes from '../views/Notes.vue'
 
 Vue.use(VueRouter)
 
@@ -9,18 +8,16 @@ const routes = [{
         redirect: '/notes'
     },
     {
-        path: '/notes',
+        path: '/notes/:id?',
         name: 'notes',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: Notes
+        component: () =>
+            import( /* webpackChunkName: "map" */ '../views/Notes.vue')
     },
     {
         path: '/map',
         name: 'map',
         component: () =>
-            import ( /* webpackChunkName: "map" */ '../views/Map.vue')
+            import( /* webpackChunkName: "map" */ '../views/Map.vue')
     }
 ]
 

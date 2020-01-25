@@ -1,114 +1,110 @@
 <template>
-    <div class="container">
-        <div class="row">
-        <div class="col-sm-10">
-            <h1 class="">MindNote</h1>
-            <hr><br><br>
-            <button type="button" class="btn btn-success btn-sm" v-b-modal.note-modal>Create a new note</button>
-            <br><br>
-            <table>
-                <tbody>
-                    <td>
-                        <table class="table table-hover">
-                        <thead>
-                            <tr>
-                            <th scope="col">Title</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(note, index) in notes" :key="index">
-                            <td><button type="button" class="btn btn-sm" @click="getANote(note.id)">{{ note.title }}</button></td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-warning btn-sm" v-b-modal.note-update-modal>Edit</button>   
-                                <button type="button" class="btn btn-danger btn-sm" @click="onDeleteNote(note)">Delete</button>
-                                </div>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </td>
-                    <td>
-                        <h2 class="display-2">{{ selected_note }}</h2>
-                    </td>
-                </tbody>
-            </table>
+  <b-container fluid>
+    <div class="row mx-0" id="row">
+      <!--
+        <button type="button" class="btn btn-success btn-sm" v-b-modal.note-modal>Create a new note</button>
+        <br />
+      <br />-->
+      <b-col cols="4" class="px-0" id="left-column">
+        <div class="pl-0 pr-0 border-right overflow-auto" id="notes">
+          <note-table-component
+            v-for="(note, index) in notes"
+            :key="index"
+            :id="note.id"
+            :title="note.title"
+            v-on:change_note="change_note"
+            v-on:delete_note="delete_note"
+            v-on:update_note="update_note"
+          ></note-table-component>
         </div>
+        <div
+          cols="4"
+          class="py-3 bg-success"
+          style="flex: 0; cursor: pointer;"
+          v-b-modal.note-modal
+        >
+          <span class="text-light">Create a new note</span>
         </div>
-        <b-modal ref="addNoteModal"
-                id="note-modal"
-                title="Add a new note"
-                hide-footer>
-        <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-        <b-form-group id="form-title-group"
-                        label="Title:"
-                        label-for="form-title-input">
-            <b-form-input id="form-title-input"
-                            type="text"
-                            v-model="addNoteForm.title"
-                            required
-                            placeholder="Enter title">
-            </b-form-input>
-            </b-form-group>
-            <b-form-group id="form-content-group"
-                        label="Content:"
-                        label-for="form-content-input">
-                <b-form-input id="form-content-input"
-                            type="text"
-                            v-model="addNoteForm.content"
-                            required
-                            placeholder="Write whatever is on your mind!">
-                </b-form-input>
-            </b-form-group>
-            <b-button-group>
-            <b-button type="submit" variant="primary">Submit</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
-            </b-button-group>
-        </b-form>
-        </b-modal>
-
-        <b-modal ref="editNoteModal"
-                id="note-update-modal"
-                title="Update"
-                hide-footer>
-        <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
-        <b-form-group id="form-title-edit-group"
-                        label="Title:"
-                        label-for="form-title-edit-input">
-            <b-form-input id="form-title-edit-input"
-                            type="text"
-                            v-model="editForm.title"
-                            required
-                            placeholder="Enter title">
-            </b-form-input>
-            </b-form-group>
-            <b-form-group id="form-content-edit-group"
-                        label="Content:"
-                        label-for="form-content-edit-input">
-                <b-form-input id="form-content-edit-input"
-                            type="text"
-                            v-model="editForm.content"
-                            required
-                            placeholder="Let your mind wander">
-                </b-form-input>
-            </b-form-group>
-            <b-button-group>
-            <b-button type="submit" variant="primary">Update</b-button>
-            <b-button type="reset" variant="danger">Cancel</b-button>
-            </b-button-group>
-        </b-form>
-        </b-modal>
+      </b-col>
+      <b-col cols="8">
+        <note-viewer :id="current_id" ref="note_viewer"></note-viewer>
+      </b-col>
     </div>
+    <b-modal ref="addNoteModal" id="note-modal" title="Add a new note" hide-footer>
+      <b-form @submit="onSubmit" @reset="onReset" class="w-100">
+        <b-form-group id="form-title-group" label="Title:" label-for="form-title-input">
+          <b-form-input
+            id="form-title-input"
+            type="text"
+            v-model="addNoteForm.title"
+            required
+            placeholder="Enter title"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group id="form-content-group" label="Content:" label-for="form-content-input">
+          <b-form-input
+            id="form-content-input"
+            type="text"
+            v-model="addNoteForm.content"
+            required
+            placeholder="Write whatever is on your mind!"
+          ></b-form-input>
+        </b-form-group>
+        <b-button-group>
+          <b-button type="submit" variant="primary">Submit</b-button>
+          <b-button type="reset" variant="danger">Reset</b-button>
+        </b-button-group>
+      </b-form>
+    </b-modal>
+
+    <b-modal ref="editNoteModal" id="note-update-modal" title="Update" hide-footer>
+      <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
+        <b-form-group id="form-title-edit-group" label="Title:" label-for="form-title-edit-input">
+          <b-form-input
+            id="form-title-edit-input"
+            type="text"
+            v-model="editForm.title"
+            required
+            placeholder="Enter title"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          id="form-content-edit-group"
+          label="Content:"
+          label-for="form-content-edit-input"
+        >
+          <b-form-input
+            id="form-content-edit-input"
+            type="text"
+            v-model="editForm.content"
+            required
+            placeholder="Let your mind wander"
+          ></b-form-input>
+        </b-form-group>
+        <b-button-group>
+          <b-button type="submit" variant="primary">Update</b-button>
+          <b-button type="reset" variant="danger">Cancel</b-button>
+        </b-button-group>
+      </b-form>
+    </b-modal>
+  </b-container>
 </template>
 
 <script>
 import axios from 'axios';
 
+import NoteTableComponent from '@/components/NoteTableComponent.vue';
+import NoteViewer from '@/components/NoteViewer.vue';
+
 export default {
+    components: {
+        NoteTableComponent,
+        NoteViewer
+    },
     data() {
         return {
             notes: [],
-            selected_note: '',
+            current_id: this.$route.params.id ? this.$route.params.id : '',
             addNoteForm: {
                 title: '',
                 content: '',
@@ -121,52 +117,47 @@ export default {
         };
     },
     methods: {
+        async get_note(id) {
+            const path = `http://localhost:5000/api/note/${id}`;
+            return (await axios.get(path)).data;
+        },
         async getNotes() {
             const path = 'http://localhost:5000/api/notes';
             this.notes = (await axios.get(path)).data;
         },
-        async getANote(id) {
-            const path = `http://localhost:5000/api/note/${id}`;
-            this.selected_note = (await axios.get(path)).data.content;
-        },
-        addNote(payload) {
+        async addNote(payload) {
             const path = 'http://localhost:5000/api/note';
-            axios.post(path, payload)
-                .then(() => {
-                    this.getNotes();
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    console.log(error);
-                    this.getNotes();
-            });
+            let id = (await axios.post(path, payload)).data.id;
+            this.getNotes();
+            this.change_note(id);
         },
-        editBook(book) {
-            this.editForm = book;
+        async change_note(id) {
+            this.$router.replace(`/notes/${id}`);
+            this.current_id = id;
         },
-        updateNote(payload, id) {
+        async update_note(id) {
+            let note = (await this.get_note(id));
+            this.editForm.id = note.id;
+            this.editForm.title = note.title;
+            this.editForm.content = note.content;
+
+            this.$bvModal.show('note-update-modal');
+        },
+        async send_update_note(payload, id) {
             const path = `http://localhost:5000/api/note/${id}`;
-            axios.post(path, payload)
-                .then(() => {
-                    this.getNotes();
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    console.log(error);
-                    this.getNotes();
-            });
+            await axios.post(path, payload);
+            this.$refs.note_viewer.get_note(id);
+            this.getNotes();
         },
-        removeNote(id) {
+        async delete_note(id) {
             const path = `http://localhost:5000/api/note/${id}`;
-            axios.delete(path)
-            .then(() => {
+            try {
+                await axios.delete(path);
                 this.getNotes();
-            })
-            .catch((error) => {
-                // eslint-disable-next-line
+                this.change_note('');
+            } catch (error) {
                 console.error(error);
-                this.getBooks();
-            });
+            }
         },
         initForm() {
             this.addNoteForm.title = '';
@@ -197,17 +188,13 @@ export default {
                 title: this.editForm.title,
                 content: this.editForm.content,
             };
-            this.updateNote(payload, this.editForm.id);
+            this.send_update_note(payload, this.editForm.id);
             this.initForm();
         },
         onResetUpdate(evt) {
             evt.preventDefault();
             this.$refs.editBookModal.hide();
             this.initForm();
-            this.getBooks();
-        },
-        onDeleteNote(note) {
-            this.removeNote(note.id);
         },
     },
     created() {
@@ -215,3 +202,36 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.container-fluid {
+  padding-right: 0;
+  padding-left: 0;
+  flex: 1;
+  display: flex;
+  max-height: inherit;
+  overflow: hidden;
+}
+
+#row {
+  max-height: inherit;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+#left-column {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#notes {
+  max-height: inherit;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+</style>
