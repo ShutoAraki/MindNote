@@ -26,11 +26,11 @@ class Database:
       raise NoteNotFoundException()
     return {'id': str(note['_id']), 'title': note['title'], 'content': note['content']}
 
-  def get_note_vectors(self, note_id):
-    note = self.collection.find_one({'_id': ObjectId(note_id)}, {'_id': 0, 'vector': 1})
-    if note is None:
+  def get_notes_vectors(self):
+    notes = self.collection.find({}, {'_id': 1, 'title': 1 , 'vector': 1})
+    if notes is None:
       raise NoteNotFoundException()
-    return note['vector']
+    return [{'id': str(note['_id']), 'title': note['title'], 'vector': note['vector']} for note in notes]
 
   def get_notes(self):
     notes = self.collection.find({}, {'_id': 1, 'title': 1})
@@ -42,7 +42,17 @@ class Database:
     ]
 
   def update_note(self, note_id, title, content, vector):
-    pass
+    note = { '$set' :{
+      'title': title,
+      'content': content,
+      'vector': vector,
+      'last_edit': datetime.now()
+    }}
+    result = self.collection.update_one({'_id': ObjectId(note_id)}, note)
+    if result.modified_count == 0:
+      raise NoteNotFoundException()
 
   def delete_note(self, note_id):
-    pass
+    result = self.collection.delete_one({'_id': ObjectId(note_id)})
+    if result.deleted_count == 0:
+      raise NoteNotFoundException()
