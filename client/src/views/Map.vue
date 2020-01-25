@@ -27,11 +27,9 @@ export default {
     }
   },
   async created() {
-    console.log('Started loading')
     this.loading = true;
     this.note_data = (await axios.get(process.env.VUE_APP_API_URL + '/api/map')).data;
     this.loading = false;
-    console.log('Loaded!')
   },
 }
 </script>

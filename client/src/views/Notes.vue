@@ -162,13 +162,9 @@ export default {
         },
         async delete_note(id) {
             const path = `http://localhost:5000/api/note/${id}`;
-            try {
-                await axios.delete(path);
-                this.get_notes();
-                this.change_note('');
-            } catch (error) {
-                console.error(error);
-            }
+            await axios.delete(path);
+            this.get_notes();
+            this.change_note('');
         },
         initForm() {
             this.addNoteForm.title = '';

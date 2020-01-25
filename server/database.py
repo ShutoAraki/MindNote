@@ -21,10 +21,10 @@ class Database:
     return {'id': str(inserted_note.inserted_id)}
 
   def get_note(self, note_id):
-    note = self.collection.find_one({'_id': ObjectId(note_id)}, {'_id': 1, 'title': 1, 'content': 1})
+    note = self.collection.find_one({'_id': ObjectId(note_id)}, {'_id': 1, 'title': 1, 'content': 1, 'last_edit': 1})
     if note is None:
       raise NoteNotFoundException()
-    return {'id': str(note['_id']), 'title': note['title'], 'content': note['content']}
+    return {'id': str(note['_id']), 'title': note['title'], 'content': note['content'], 'last_edit': note['last_edit']}
 
   def get_notes_vectors(self):
     notes = self.collection.find({}, {'_id': 1, 'title': 1 , 'vector': 1, 'content': 1})
@@ -33,11 +33,11 @@ class Database:
     return [{'id': str(note['_id']), 'title': note['title'], 'vector': note['vector'], 'content': note['content'] if len(note['content']) < 30 else note['content'][:30 - 3] + '...'} for note in notes]
 
   def get_notes(self):
-    notes = self.collection.find({}, {'_id': 1, 'title': 1})
+    notes = self.collection.find({}, {'_id': 1, 'title': 1, 'last_edit': 1})
     if notes is None:
       raise NoteNotFoundException()
     return [
-      {'id': str(note['_id']), 'title': note['title']}
+      {'id': str(note['_id']), 'title': note['title'], 'last_edit': 'last_edit'}
       for note in notes.sort([('last_edit', pymongo.DESCENDING)])
     ]
 

@@ -5,18 +5,33 @@ import urllib.request
 import os
 from zipfile import ZipFile
 import torch
+import sys
+import time
 
 nltk.download('punkt')
 
+def reporthook(count, block_size, total_size):
+  global start_time
+  if count == 0:
+      start_time = time.time()
+      return
+  duration = time.time() - start_time
+  progress_size = int(count * block_size)
+  speed = int(progress_size / (1024 * duration))
+  percent = int(count * block_size * 100 / total_size)
+  sys.stdout.write("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
+                  (percent, progress_size / (1024 * 1024), speed, duration))
+  sys.stdout.flush()
+
 model_file = 'models.py'
 if not os.path.isfile(model_file):
-  urllib.request.urlretrieve('https://raw.githubusercontent.com/facebookresearch/InferSent/master/models.py', model_file)
+  urllib.request.urlretrieve('https://raw.githubusercontent.com/facebookresearch/InferSent/master/models.py', model_file, reporthook)
 from models import InferSent
 
 fast_text_folder = 'fastText'
 if not os.path.isdir(fast_text_folder):
   os.mkdir(fast_text_folder)
-  urllib.request.urlretrieve('https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M.vec.zip', 'crawl-300d-2M.vec.zip')
+  urllib.request.urlretrieve('https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M.vec.zip', 'crawl-300d-2M.vec.zip', reporthook)
   zf = ZipFile('crawl-300d-2M.vec.zip')
   zf.extractall(path = fast_text_folder)
   zf.close()
@@ -24,8 +39,8 @@ if not os.path.isdir(fast_text_folder):
 
 if not os.path.isdir('encoder'):
   os.mkdir('encoder')
-  urllib.request.urlretrieve('https://dl.fbaipublicfiles.com/infersent/infersent2.pkl', 'encoder/infersent.pkl')
-  
+  urllib.request.urlretrieve('https://dl.fbaipublicfiles.com/infersent/infersent2.pkl', 'encoder/infersent.pkl', reporthook)
+
 class VectorGenerator:
   def __init__(self, model_path='encoder/infersent.pkl'):
     params_model = {'bsize': 64, 'word_emb_dim': 300, 'enc_lstm_dim': 2048,
