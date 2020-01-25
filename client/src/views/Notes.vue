@@ -5,7 +5,7 @@
         <button type="button" class="btn btn-success btn-sm" v-b-modal.note-modal>Create a new note</button>
         <br />
       <br />-->
-      <b-col cols="4" class="px-0" id="left-column">
+      <b-col cols="4" class="px-0" id="left-column" v-if="!loading_notes">
         <div class="pl-0 pr-0 border-right overflow-auto" id="notes">
           <note-table-component
             v-for="(note, index) in notes"
@@ -25,6 +25,14 @@
         >
           <span class="text-light">Create a new note</span>
         </div>
+      </b-col>
+      <b-col
+        cols="4"
+        class="px-0 d-flex flex-column justify-content-center h-100"
+        id="left-column"
+        v-if="loading_notes"
+      >
+        <b-spinner class="mx-auto" label="Loading..."></b-spinner>
       </b-col>
       <b-col cols="8">
         <note-viewer :id="current_id" ref="note_viewer"></note-viewer>
@@ -103,6 +111,7 @@ export default {
     },
     data() {
         return {
+            loading_notes: false,
             notes: [],
             current_id: this.$route.params.id ? this.$route.params.id : '',
             addNoteForm: {
@@ -121,14 +130,16 @@ export default {
             const path = `http://localhost:5000/api/note/${id}`;
             return (await axios.get(path)).data;
         },
-        async getNotes() {
+        async get_notes() {
+            this.loading_notes = true;
             const path = 'http://localhost:5000/api/notes';
             this.notes = (await axios.get(path)).data;
+            this.loading_notes = false;
         },
         async addNote(payload) {
             const path = 'http://localhost:5000/api/note';
             let id = (await axios.post(path, payload)).data.id;
-            this.getNotes();
+            this.get_notes();
             this.change_note(id);
         },
         async change_note(id) {
@@ -147,13 +158,13 @@ export default {
             const path = `http://localhost:5000/api/note/${id}`;
             await axios.post(path, payload);
             this.$refs.note_viewer.get_note(id);
-            this.getNotes();
+            this.get_notes();
         },
         async delete_note(id) {
             const path = `http://localhost:5000/api/note/${id}`;
             try {
                 await axios.delete(path);
-                this.getNotes();
+                this.get_notes();
                 this.change_note('');
             } catch (error) {
                 console.error(error);
@@ -198,7 +209,7 @@ export default {
         },
     },
     created() {
-        this.getNotes();
+        this.get_notes();
     },
 };
 </script>

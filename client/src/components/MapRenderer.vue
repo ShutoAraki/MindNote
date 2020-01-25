@@ -1,12 +1,13 @@
 <script>
-import axios from 'axios';
 import { Scatter } from 'vue-chartjs';
 
 export default {
   extends: Scatter,
+  props: {
+    note_data: Array
+  },
   data() {
     return {
-      note_data: [],
       coordinates: [],
       options: {
         responsive: true,
@@ -59,7 +60,6 @@ export default {
     };
   },
   async mounted() {
-    this.note_data = (await axios.get(process.env.VUE_APP_API_URL + '/api/map')).data;
     for (let i = 0; i < this.note_data.length; i++) {
       this.coordinates.push({ x: this.note_data[i].x, y: this.note_data[i].y });
     }

@@ -1,7 +1,10 @@
 <template>
-  <b-container fluid>
-    <div v-if="loading">
-      <span>Loading note...</span>
+  <b-container fluid class="d-flex h-100 w-100 flex-grow-1">
+    <div
+      class="px-0 d-flex flex-column justify-content-center h-100 w-100 flex-grow-1"
+      v-if="loading"
+    >
+      <b-spinner class="mx-auto" label="Loading..."></b-spinner>
     </div>
     <div v-if="!loading && note_loaded" class="pt-2 text-left">
       <h3>{{title}}</h3>
