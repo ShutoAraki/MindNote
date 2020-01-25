@@ -9,6 +9,9 @@ import sys
 import time
 
 nltk.download('punkt')
+nltk.download('vader_lexicon')
+
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 def reporthook(count, block_size, total_size):
   global start_time
@@ -50,5 +53,10 @@ class VectorGenerator:
     self.model.set_w2v_path('fastText/crawl-300d-2M.vec')
     self.model.build_vocab_k_words(K=100000)
 
+    self.sentiment_model = SentimentIntensityAnalyzer()
+
   def generate_vector(self, text):
     return list(map(lambda value: value.item(), self.model.encode([text], tokenize=True)[0]))
+
+  def generate_sentiment(self, text):
+    return self.sentiment_model.polarity_scores(text)['compound']

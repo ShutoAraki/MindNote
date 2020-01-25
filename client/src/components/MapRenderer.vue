@@ -78,7 +78,9 @@ export default {
             pointRadius: 8,
             pointHoverRadius: 10,
             pointHitRadius: 10,
-            pointStyle: note_icon
+            //pointStyle: note_icon
+            pointStyle: 'circle',
+            pointBackgroundColor: this.note_data.map((note) => note.color)
           }
         ]
       },
