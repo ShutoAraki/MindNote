@@ -14,6 +14,10 @@ WORKDIR /server
 COPY server/requirements.txt ./
 RUN apt-get update && apt install -y --no-install-recommends cmake && pip install --no-cache-dir -r requirements.txt
 
+COPY server/vector.py ./vector.py
+
+RUN python ./vector.py
+
 COPY server/. ./
 
 COPY --from=vue /app/dist ./public

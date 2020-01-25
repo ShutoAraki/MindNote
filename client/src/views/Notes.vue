@@ -129,17 +129,17 @@ export default {
     },
     methods: {
         async get_note(id) {
-            const path = `http://localhost:5000/api/note/${id}`;
+            const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
             return (await axios.get(path)).data;
         },
         async get_notes() {
             this.loading_notes = true;
-            const path = 'http://localhost:5000/api/notes';
+            const path = process.env.VUE_APP_API_URL + '/api/notes';
             this.notes = (await axios.get(path)).data;
             this.loading_notes = false;
         },
         async addNote(payload) {
-            const path = 'http://localhost:5000/api/note';
+            const path = process.env.VUE_APP_API_URL + '/api/note';
             let id = (await axios.post(path, payload)).data.id;
             this.get_notes();
             this.change_note(id);
@@ -157,13 +157,13 @@ export default {
             this.$bvModal.show('note-update-modal');
         },
         async send_update_note(payload, id) {
-            const path = `http://localhost:5000/api/note/${id}`;
+            const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
             await axios.post(path, payload);
             this.$refs.note_viewer.get_note(id);
             this.get_notes();
         },
         async delete_note(id) {
-            const path = `http://localhost:5000/api/note/${id}`;
+            const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
             await axios.delete(path);
             this.get_notes();
             this.change_note('');

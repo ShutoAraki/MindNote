@@ -36,7 +36,7 @@ export default {
     async get_note(id) {
       this.note_loaded = false;
       if (id) {
-        const path = `http://localhost:5000/api/note/${id}`;
+        const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
         try {
           this.loading = true;
           let note = (await axios.get(path)).data;
