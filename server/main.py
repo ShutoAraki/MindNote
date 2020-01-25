@@ -58,7 +58,10 @@ def get_map():
         return jsonify([])
     vectors = []
     for note in notes:
-        vectors.append(note['vector'])
+        if (len(note['vector']) == 4096):
+            vectors.append(note['vector'])
+        else:
+            vectors.append([0.0] * 4096)
         del note['vector']
     coordinates = mapper.compute_map(vectors)
     assert len(notes) == len(coordinates)
