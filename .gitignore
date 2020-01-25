@@ -149,3 +149,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+server/d2v.model.docvecs.vectors_docs.npy
