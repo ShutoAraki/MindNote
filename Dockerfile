@@ -18,4 +18,6 @@ COPY server/. ./
 
 COPY --from=vue /app/dist ./public
 
+RUN python ./vector.py
+
 CMD [ "python", "./main.py" ]

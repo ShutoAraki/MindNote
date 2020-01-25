@@ -151,5 +151,3 @@ dmypy.json
 .pyre/
 
 server/public
-server/fastText
-server/encoder
