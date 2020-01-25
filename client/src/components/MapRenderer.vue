@@ -1,4 +1,6 @@
 <script>
+import moment from 'moment';
+
 import { Scatter } from 'vue-chartjs';
 
 export default {
@@ -49,7 +51,7 @@ export default {
               return ''
             },
             afterLabel: (tooltipItem) => {
-              return this.note_data[tooltipItem['index']].content;
+              return this.note_data[tooltipItem['index']].content + '\n' + moment(this.note_data[tooltipItem['index']].last_edit).format('M/D/YY HH:mm');
             }
           }
         },

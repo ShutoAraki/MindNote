@@ -12,6 +12,7 @@
             :key="index"
             :id="note.id"
             :title="note.title"
+            :date="note.last_edit"
             v-on:change_note="change_note"
             v-on:delete_note="delete_note"
             v-on:update_note="update_note"
