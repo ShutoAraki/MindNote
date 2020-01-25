@@ -1,4 +1,8 @@
 import pymongo
+from bson.objectid import ObjectId
+
+class NoteNotFoundException(Exception):
+  pass
 
 class Database:
   def __init__(self):
@@ -14,17 +18,20 @@ class Database:
     inserted_note = self.collection.insert_one(note)
     return {'id': str(inserted_note.inserted_id)}
 
-  def get_note(self, id):
-    pass
+  def get_note(self, note_id):
+    note = self.collection.find_one({'_id': ObjectId(note_id)}, {'_id': 1, 'title': 1, 'content': 1})
+    if note is None:
+      raise NoteNotFoundException()
+    return {'id': str(note['_id']), 'title': note['title'], 'content': note['content']}
 
-  def get_note_vectors(self, id):
+  def get_note_vectors(self, note_id):
     pass
 
   def get_notes(self):
     pass
 
-  def update_note(self, id, title, content, vector):
+  def update_note(self, note_id, title, content, vector):
     pass
 
-  def delete_note(self, id):
+  def delete_note(self, note_id):
     pass
