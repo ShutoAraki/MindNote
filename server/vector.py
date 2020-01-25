@@ -4,4 +4,4 @@ class VectorGenerator:
     pass
 
   def generate_vector(self, text):
-    pass
+    return [0.0] * 128
