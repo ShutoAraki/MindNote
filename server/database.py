@@ -53,7 +53,7 @@ class Database:
       'last_edit': datetime.now()
     }}
     result = self.collection.update_one({'_id': ObjectId(note_id)}, note)
-    if result.modified_count == 0:
+    if result.matched_count == 0:
       raise NoteNotFoundException()
 
   def delete_note(self, note_id):
