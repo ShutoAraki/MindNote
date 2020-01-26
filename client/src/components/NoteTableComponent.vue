@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     is_active() {
-      return this.$route.params.id === this.id;
+      return this.$route.params.id === this.note.id;
     },
     formatted_date() {
       return moment(this.note.date).format('M/D/YY HH:mm');
