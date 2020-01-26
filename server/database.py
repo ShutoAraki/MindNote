@@ -10,10 +10,11 @@ class Database:
     self.client = pymongo.MongoClient("mongodb+srv://mindnote:mindnote@cluster0-dwh9v.gcp.mongodb.net/test?retryWrites=true&w=majority")
     self.collection = self.client['mindnote']['notes']
 
-  def create_note(self, title, content, vector, sentiment):
+  def create_note(self, title, content, favorite, vector, sentiment):
     note = {
       'title': title,
       'content': content,
+      'favorite': favorite,
       'vector': vector,
       'sentiment': sentiment,
       'last_edit': datetime.now()
@@ -22,30 +23,31 @@ class Database:
     return {'id': str(inserted_note.inserted_id)}
 
   def get_note(self, note_id):
-    note = self.collection.find_one({'_id': ObjectId(note_id)}, {'_id': 1, 'title': 1, 'content': 1, 'last_edit': 1})
+    note = self.collection.find_one({'_id': ObjectId(note_id)}, {'_id': 1, 'title': 1, 'content': 1, 'last_edit': 1, 'favorite': 1})
     if note is None:
       raise NoteNotFoundException()
-    return {'id': str(note['_id']), 'title': note['title'], 'content': note['content'], 'last_edit': note['last_edit']}
+    return {'id': str(note['_id']), 'title': note['title'], 'content': note['content'], 'favorite': note['favorite'], 'last_edit': note['last_edit']}
 
   def get_notes_vectors(self):
-    notes = self.collection.find({}, {'_id': 1, 'title': 1 , 'vector': 1, 'sentiment': 1, 'content': 1, 'last_edit': 1})
+    notes = self.collection.find({}, {'_id': 1, 'title': 1 , 'vector': 1, 'sentiment': 1, 'content': 1, 'last_edit': 1, 'favorite': 1})
     if notes is None:
       raise NoteNotFoundException()
-    return [{'id': str(note['_id']), 'title': note['title'], 'vector': note['vector'], 'sentiment': note['sentiment'], 'content': note['content'], 'last_edit': note['last_edit']} for note in notes]
+    return [{'id': str(note['_id']), 'title': note['title'], 'vector': note['vector'], 'sentiment': note['sentiment'], 'content': note['content'], 'last_edit': note['last_edit'], 'favorite': note['favorite']} for note in notes]
 
   def get_notes(self):
-    notes = self.collection.find({}, {'_id': 1, 'title': 1, 'last_edit': 1})
+    notes = self.collection.find({}, {'_id': 1, 'title': 1, 'last_edit': 1, 'favorite': 1})
     if notes is None:
       raise NoteNotFoundException()
     return [
-      {'id': str(note['_id']), 'title': note['title'], 'last_edit': note['last_edit']}
+      {'id': str(note['_id']), 'title': note['title'], 'last_edit': note['last_edit'], 'favorite': note['favorite']}
       for note in notes.sort([('last_edit', pymongo.DESCENDING)])
     ]
 
-  def update_note(self, note_id, title, content, vector, sentiment):
+  def update_note(self, note_id, title, content, favorite, vector, sentiment):
     note = { '$set' :{
       'title': title,
       'content': content,
+      'favorite': favorite,
       'vector': vector,
       'sentiment': sentiment,
       'last_edit': datetime.now()

@@ -21,12 +21,12 @@ from graph_color import generate_colors
 
 @app.route("/api/note", methods=['POST'])
 def create_note():
-    return jsonify(db.create_note(request.json['title'], request.json['content'], vector_model.generate_vector(request.json['content']), vector_model.generate_sentiment(request.json['content'])))
+    return jsonify(db.create_note(request.json['title'], request.json['content'], request.json['favorite'], vector_model.generate_vector(request.json['content']), vector_model.generate_sentiment(request.json['content'])))
 
 @app.route("/api/note/<note_id>", methods=['POST'])
 def update_note(note_id):
     try:
-        jsonify(db.update_note(note_id, request.json['title'], request.json['content'], vector_model.generate_vector(request.json['content']), vector_model.generate_sentiment(request.json['content'])))
+        jsonify(db.update_note(note_id, request.json['title'], request.json['content'], request.json['favorite'], vector_model.generate_vector(request.json['content']), vector_model.generate_sentiment(request.json['content'])))
         return jsonify({})
     except:
         return jsonify({}), 404

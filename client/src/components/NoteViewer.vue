@@ -11,7 +11,10 @@
       <br />
       <span>{{ content }}</span>
     </div>
-    <div v-if="!loading && !note_loaded">
+    <div
+      class="px-0 d-flex flex-column justify-content-center h-100 w-100 flex-grow-1"
+      v-if="!loading && !note_loaded"
+    >
       <span>No note loaded!</span>
     </div>
   </b-container>

@@ -62,8 +62,16 @@ export default {
     };
   },
   async mounted() {
+    let shapes = [];
+    let radius = [];
+    let borderWidth = [];
+    let hoverBorderWidth = [];
     for (let i = 0; i < this.note_data.length; i++) {
       this.coordinates.push({ x: this.note_data[i].x, y: this.note_data[i].y });
+      shapes.push(this.note_data[i].favorite ? 'star' : 'circle');
+      radius.push(this.note_data[i].favorite ? 12 : 8);
+      borderWidth.push(this.note_data[i].favorite ? 8 : 0);
+      hoverBorderWidth.push(this.note_data[i].favorite ? 5 : 0);
     }
     let note_icon = new Image();
     note_icon.src = 'http://simpleicon.com/wp-content/uploads/note.png';
@@ -75,12 +83,15 @@ export default {
           {
             data: this.coordinates,
             backgroundColor: '#ff0000',
-            pointRadius: 8,
+            pointRadius: radius,
             pointHoverRadius: 10,
             pointHitRadius: 10,
+            pointBorderWidth: 5,
             //pointStyle: note_icon
-            pointStyle: 'circle',
-            pointBackgroundColor: this.note_data.map((note) => note.color)
+            pointStyle: shapes,
+            pointBackgroundColor: this.note_data.map((note) => note.color),
+            pointBorderColor: this.note_data.map((note) => note.color),
+            pointHoverBorderWidth: hoverBorderWidth,
           }
         ]
       },

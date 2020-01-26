@@ -5,7 +5,12 @@
     v-bind:class="{ active: is_active }"
   >
     <div style="overflow-x: hidden; white-space: nowrap;">
-      <button type="button" style="font-size: 20px" class="btn btn-sm" @click="change_note">{{ title }}</button>
+      <button
+        type="button"
+        style="font-size: 20px"
+        class="btn btn-sm"
+        @click="change_note"
+      >{{ note.title }}</button>
     </div>
     <div class="spacer"></div>
     <small
@@ -14,6 +19,10 @@
       v-bind:class="{ active: is_active }"
     >{{ formatted_date }}</small>
     <div class="btn-group" role="group">
+      <button type="button" class="btn btn-secondary btn-sm" @click="favorite_note">
+        <b-icon icon="star-fill" v-if="note.favorite"></b-icon>
+        <b-icon icon="star" v-if="!note.favorite"></b-icon>
+      </button>
       <button type="button" class="btn btn-warning btn-sm" @click="update_note">Edit</button>
       <button type="button" class="btn btn-danger btn-sm" @click="delete_note">Delete</button>
     </div>
@@ -25,27 +34,28 @@ import moment from 'moment';
 
 export default {
   props: {
-    id: String,
-    title: String,
-    date: String,
+    note: Object
   },
   computed: {
     is_active() {
       return this.$route.params.id === this.id;
     },
     formatted_date() {
-      return moment(this.date).format('M/D/YY HH:mm');
+      return moment(this.note.date).format('M/D/YY HH:mm');
     }
   },
   methods: {
+    favorite_note() {
+      this.$emit('favorite_note', this.note.id, !this.note.favorite);
+    },
     change_note() {
-      this.$emit('change_note', this.id);
+      this.$emit('change_note', this.note.id);
     },
     update_note() {
-      this.$emit('update_note', this.id);
+      this.$emit('update_note', this.note.id);
     },
     delete_note() {
-      this.$emit('delete_note', this.id);
+      this.$emit('delete_note', this.note.id);
     },
   }
 }
