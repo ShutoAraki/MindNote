@@ -160,8 +160,9 @@ export default {
       this.editForm.id = note.id;
       this.editForm.title = note.title;
       this.editForm.content = note.content;
+      this.editForm.favorite = note.favorite;
 
-      this.$bvModal.show('note-update-modal');
+      this.$refs.editNoteModal.show();
     },
     async send_update_note(payload, id) {
       const path = process.env.VUE_APP_API_URL + `/api/note/${id}`;
@@ -198,16 +199,16 @@ export default {
       this.$refs.addNoteModal.hide();
       this.initForm();
     },
-    onSubmitUpdate(evt) {
+    async onSubmitUpdate(evt) {
       evt.preventDefault();
-      this.$refs.editNoteModal.hide();
       const payload = {
         title: this.editForm.title,
         content: this.editForm.content,
         favorite: this.editForm.favorite
       };
-      this.send_update_note(payload, this.editForm.id);
+      await this.send_update_note(payload, this.editForm.id);
       this.$refs.note_viewer.get_note(this.editForm.id);
+      this.$refs.editNoteModal.hide();
       this.initForm();
     },
     onResetUpdate(evt) {
