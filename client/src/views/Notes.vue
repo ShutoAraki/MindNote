@@ -187,7 +187,8 @@ export default {
       this.$refs.addNoteModal.hide();
       const payload = {
         title: this.addNoteForm.title,
-        content: this.addNoteForm.content
+        content: this.addNoteForm.content,
+        favorite: false,
       };
       this.addNote(payload);
       this.initForm();
