@@ -50,14 +50,14 @@
           ></b-form-input>
         </b-form-group>
         <b-form-group id="form-content-group" label="Content:" label-for="form-content-input">
-          <b-form-input
+          <b-form-textarea
             id="form-content-input"
             type="text"
             size="lg"
             v-model="addNoteForm.content"
             required
             placeholder="Write whatever is on your mind!"
-          ></b-form-input>
+          ></b-form-textarea>
         </b-form-group>
         <b-button-group>
           <b-button type="submit" variant="primary">Submit</b-button>
@@ -82,13 +82,13 @@
           label="Content:"
           label-for="form-content-edit-input"
         >
-          <b-form-input
-            id="form-content-edit-input"
+          <b-form-textarea
+            id="form-content-input"
             type="text"
             v-model="editForm.content"
             required
             placeholder="Let your mind wander"
-          ></b-form-input>
+          ></b-form-textarea>
         </b-form-group>
         <b-button-group>
           <b-button type="submit" variant="primary">Update</b-button>
